@@ -13,7 +13,8 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        String[] ok = { "guild:2,10", "buy-hero:Berserker,2,52.5,6,30.5" };
+        String[] ok = { "guild:100,10", "buy-hero:Berserker,2,52.5,6,30.5", "train-hero:Rogue",
+                "train-hero:Berserker" };
 
         ArrayList<String> errorStack = new ArrayList<String>();
 
@@ -44,10 +45,14 @@ public class Main {
                     double coutHp = command.nextDouble();
                     int argent = command.nextInt();
                     int armure = command.nextInt();
-                    Quete quete = new Quete(categorie, coutHp, argent, armure, maGuilde);
+                    Quete quete = new Quete(categorie, coutHp, argent, armure, maGuilde, errorStack);
 
                 }
                 case "train-hero" -> {
+                    Hero hero = maGuilde.trouverHeroParNom(command.nextString());
+                    if (hero != null) {
+                        hero.train();
+                    }
                 }
             }
         }
