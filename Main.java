@@ -1,8 +1,7 @@
-package guildcommands;
+import java.util.ArrayList;
 
-import java.io.Console;
+import guildcommands.GuildCommand;
 import guildcommands.GuildCommandSystem;
-import Guilde.Guilde;
 
 public class Main {
     /**
@@ -14,28 +13,67 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        GuildCommandSystem guildCommandSystem = new GuildCommandSystem(args);
+        String[] ok = { "guild:2,10", "buy-hero:Berserker,2,52.5,6,30.5" };
 
-        Guilde maGuilde = makeGuilde(guildCommandSystem.actualCommand());
+        ArrayList<String> errorStack = new ArrayList<String>();
+
+        GuildCommandSystem guildCommandSystem = new GuildCommandSystem(ok);
+
+        Guilde maGuilde = makeGuilde(guildCommandSystem.actualCommand(), errorStack);
 
         while (guildCommandSystem.hasNextCommand()) {
             GuildCommand command = guildCommandSystem.nextCommand();
+
             switch (command.getName()) {
+
                 case "buy-hero" -> {
+                    maGuilde.addHero(command.nextString(), command.nextInt(), command.nextDouble(),
+                            command.nextInt(), command.nextDouble());
                 }
                 case "buy-armor" -> {
+
+                    int qteArmures = command.nextInt();
+                    int prix = command.nextInt();
+
+                    maGuilde.bank.modifyArgent(-prix * qteArmures);
+                    maGuilde.bank.modifyArmure(qteArmures);
+
                 }
                 case "do-quest" -> {
+                    int categorie = command.nextInt();
+                    double coutHp = command.nextDouble();
+                    int argent = command.nextInt();
+                    int armure = command.nextInt();
+                    Quete quete = new Quete(categorie, coutHp, argent, armure, maGuilde);
+
                 }
                 case "train-hero" -> {
                 }
             }
         }
+        // Print les resultats
+        System.out.println("Guild Bank account: " + maGuilde.bank.getArgent() + " gold & "
+                + maGuilde.bank.getNbArmures() + " armours");
+        System.out.println("Heroes");
+        for (int i = 0; i < maGuilde.heros.size(); i++) {
+            double hp = maGuilde.heros.get(i).hp;
+            int level = maGuilde.heros.get(i).level;
+            System.out.print("-" + maGuilde.heros.get(i).name);
+            System.out.print("  level=" + level + ",   ");
+            System.out.println("HP=" + hp);
+        }
+        if (errorStack.size() > 0) {
+            System.out.println("Erreurs:");
+            for (int i = 0; i < errorStack.size(); i++) {
+                System.out.println(errorStack.get(i));
+            }
+        }
+
     }
 
-    public static Guilde makeGuilde(GuildCommand command) {
+    public static Guilde makeGuilde(GuildCommand command, ArrayList<String> errorStack) {
         double montantInitial = command.nextDouble();
         int nbArmures = command.nextInt();
-        return new Guilde(montantInitial, nbArmures);
+        return new Guilde(montantInitial, nbArmures, errorStack);
     }
 }
