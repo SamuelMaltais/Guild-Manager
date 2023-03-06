@@ -1,4 +1,3 @@
-
 public class Hero {
     public String name;
     public double hp;
