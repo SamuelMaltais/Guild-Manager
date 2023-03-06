@@ -13,9 +13,7 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        String[] ok = { "guild:100,10", "buy-hero:Berserker,2,52.5,6,30.5", "train-hero:Rogue",
-                "train-hero:Berserker" };
-
+        String[] ok = { "guild:100,10", "buy-hero:Rogue,3,73.5,7,40.7", "train-hero:Rogue", "do-quest:2,5.3,60,3" };
         ArrayList<String> errorStack = new ArrayList<String>();
 
         GuildCommandSystem guildCommandSystem = new GuildCommandSystem(ok);
@@ -46,6 +44,7 @@ public class Main {
                     int argent = command.nextInt();
                     int armure = command.nextInt();
                     Quete quete = new Quete(categorie, coutHp, argent, armure, maGuilde, errorStack);
+                    quete.commencer();
 
                 }
                 case "train-hero" -> {

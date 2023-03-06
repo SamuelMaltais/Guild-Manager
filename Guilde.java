@@ -7,6 +7,7 @@ public class Guilde {
     public Bank bank;
     public ArrayList<Hero> heros = new ArrayList<Hero>();
     private ArrayList<String> errorStack;
+
     // Hashmap pour trouver les heros plus vite selon niveau ou nom
     private HashMap<String, Hero> herosParNom = new HashMap<String, Hero>();
     private HashMap<String, ArrayList<Hero>> herosParNiveau = new HashMap<String, ArrayList<Hero>>();
@@ -17,6 +18,7 @@ public class Guilde {
         this.errorStack = errorStack;
     }
 
+    // Met un hero dans la liste globale et les listes classees
     public void addHero(String name, int level, double cost, int armourCost, double hp) {
         // On regarde si l'argent est suffisant
         bank.modifyArgent(-cost);
@@ -29,7 +31,11 @@ public class Guilde {
             herosParNom.put(name, hero);
             String levelString = Integer.toString(level);
             if (herosParNiveau.containsKey(levelString)) {
-
+                herosParNiveau.get(levelString).add(hero);
+            } else {
+                ArrayList<Hero> certainsHeros = new ArrayList<Hero>();
+                certainsHeros.add(hero);
+                herosParNiveau.put(levelString, certainsHeros);
             }
         } else {
             bank.modifyArgent(cost);
@@ -37,10 +43,15 @@ public class Guilde {
         }
     }
 
-    public ArrayList<Hero> trouverHeroParNiveau() {
-        return herosParNiveau.get("1");
+    // Trouve la liste de heros ayant comme niveau categorie
+    public ArrayList<Hero> trouverHeroParNiveau(int categorie) {
+        if (herosParNiveau.containsKey(Integer.toString(categorie))) {
+            return herosParNiveau.get(Integer.toString(categorie));
+        } else
+            return null;
     }
 
+    // Trouve un hero ayant un certain nom
     public Hero trouverHeroParNom(String nom) {
         if (herosParNom.containsKey(nom)) {
             return herosParNom.get(nom);

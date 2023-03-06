@@ -17,6 +17,8 @@ public class Hero {
             maGuilde.bank.modifyArmure(armourCost);
         }
 
+        hp = hp * 1.5;
+
     }
 
     public Hero(String name, double hp, int level, Guilde maGuilde) {
